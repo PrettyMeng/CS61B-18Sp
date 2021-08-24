@@ -1,99 +1,154 @@
 package lab9;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.ArrayList;
 
-/**
- *  A hash table-backed Map implementation. Provides amortized constant time
- *  access to elements via get(), remove(), and put() in the best case.
- *
- *  @author Your name here
- */
-public class MyHashMap<K, V> implements Map61B<K, V> {
+public class MyHashMap<K, V> implements Map61B<K, V>{
 
-    private static final int DEFAULT_SIZE = 16;
-    private static final double MAX_LF = 0.75;
+    private int N;
+    private int M;
+    private double loadFactor;
+    private bucketMap[] buckets = null;
 
-    private ArrayMap<K, V>[] buckets;
-    private int size;
+    private class bucketMap<K, V> {
+        private ArrayList<K> key_bucket;
+        private ArrayList<V> value_bucket;
 
-    private int loadFactor() {
-        return size / buckets.length;
+        public bucketMap() {
+            key_bucket = new ArrayList<>();
+            value_bucket = new ArrayList<>();
+        }
+
+        public void addToBucket(K key, V value) {
+            if (key_bucket.contains(key)) {
+                int index = key_bucket.indexOf(key);
+                value_bucket.set(index, value);
+            } else {
+                key_bucket.add(key);
+                value_bucket.add(value);
+                N++;
+            }
+        }
+
+        public V findKey(K key) {
+            int index = key_bucket.indexOf(key);
+            if (index != -1) {
+                return value_bucket.get(index);
+            } else {
+                return null;
+            }
+        }
+
+        public void iterKeysToSet(Set<K> allKeys) {
+            for (K key: key_bucket) {
+                allKeys.add(key);
+            }
+        }
     }
 
     public MyHashMap() {
-        buckets = new ArrayMap[DEFAULT_SIZE];
-        this.clear();
+        this(16, 0.75);
     }
 
-    /* Removes all of the mappings from this map. */
+    public MyHashMap(int initialSize) {
+        this(initialSize, 0.75);
+    }
+
+    public MyHashMap(int initialSize, double loadFactor) {
+        N = 0;
+        this.M = initialSize;
+        this.loadFactor = loadFactor;
+        buckets = new bucketMap[M];
+        for (int i = 0; i < M; i++) {
+            buckets[i] = new bucketMap();
+        }
+    }
+
+    private void resize(int new_M) {
+        // this will be added in addToBucket
+        N = 0;
+        bucketMap<K, V>[] new_buckets = new bucketMap[new_M];
+        for (int i = 0; i < new_M; i++) {
+            new_buckets[i] = new bucketMap();
+        }
+        Set<K> allKeys = keySet();
+        for (K key: allKeys) {
+            int index = (key.hashCode() & 0x7fffffff) % new_M;
+            new_buckets[index].addToBucket(key, get(key));
+        }
+        M = new_M;
+        buckets = new_buckets;
+    }
+
     @Override
     public void clear() {
-        this.size = 0;
-        for (int i = 0; i < this.buckets.length; i += 1) {
-            this.buckets[i] = new ArrayMap<>();
+        N = 0;
+        buckets = null;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        if (buckets == null) {
+            return false;
+        }
+        int index = (key.hashCode() & 0x7fffffff) % M;
+        V value = (V) buckets[index].findKey(key);
+        if (value != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    /** Computes the hash function of the given key. Consists of
-     *  computing the hashcode, followed by modding by the number of buckets.
-     *  To handle negative numbers properly, uses floorMod instead of %.
-     */
-    private int hash(K key) {
-        if (key == null) {
-            return 0;
-        }
-
-        int numBuckets = buckets.length;
-        return Math.floorMod(key.hashCode(), numBuckets);
-    }
-
-    /* Returns the value to which the specified key is mapped, or null if this
-     * map contains no mapping for the key.
-     */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        if (buckets == null) {
+            return null;
+        }
+        int index = (key.hashCode() & 0x7fffffff) % M;
+        V value = (V) buckets[index].findKey(key);
+        return value;
     }
 
-    /* Associates the specified value with the specified key in this map. */
-    @Override
-    public void put(K key, V value) {
-        throw new UnsupportedOperationException();
-    }
-
-    /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return N;
     }
 
-    //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
+    @Override
+    public void put(K key, V value) {
+        if ((double) N / (double) M > loadFactor) {
+            resize(M * 2);
+        }
+        int index = (key.hashCode() & 0x7fffffff) % M;
+        buckets[index].addToBucket(key, value);
+    }
 
-    /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        Set<K> allKeys = new HashSet<>();
+        for(int i = 0; i < M; i++) {
+            bucketMap<K, V> bucket = buckets[i];
+            bucket.iterKeysToSet(allKeys);
+        }
+        return allKeys;
     }
 
-    /* Removes the mapping for the specified key from this map if exists.
-     * Not required for this lab. If you don't implement this, throw an
-     * UnsupportedOperationException. */
+    @Override
+    public Iterator<K> iterator() {
+        return keySet().iterator();
+    }
+
     @Override
     public V remove(K key) {
         throw new UnsupportedOperationException();
     }
 
-    /* Removes the entry for the specified key only if it is currently mapped to
-     * the specified value. Not required for this lab. If you don't implement this,
-     * throw an UnsupportedOperationException.*/
     @Override
     public V remove(K key, V value) {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
-    }
 }
