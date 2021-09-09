@@ -28,7 +28,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int leftIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return 2 * i;
     }
 
     /**
@@ -36,7 +36,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int rightIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return 2 * i + 1;
     }
 
     /**
@@ -44,7 +44,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int parentIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return i / 2;
     }
 
     /**
@@ -106,9 +106,18 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void swim(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
-        /** TODO: Your code here. */
-        return;
+        int parentIndex = parentIndex(index);
+        if (parentIndex == 0) { // at the root
+            return;
+        }
+        if (contents[index].myPriority < contents[parentIndex].myPriority) {
+            Node tmp = contents[parentIndex];
+            contents[parentIndex] = contents[index];
+            contents[index] = tmp;
+            swim(parentIndex);
+        } else {
+            return;
+        }
     }
 
     /**
@@ -117,9 +126,30 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
-        /** TODO: Your code here. */
-        return;
+        int childIndex;
+        int leftIndex = leftIndex(index);
+        int rightIndex = rightIndex(index);
+        if (leftIndex > size || rightIndex > size) {
+            return;
+        } else if (contents[leftIndex] == null && contents[rightIndex] == null) { // at the bottom
+            return;
+        } else if (contents[rightIndex] == null) {
+            childIndex = leftIndex;
+        } else {
+            if (contents[leftIndex].myPriority < contents[rightIndex].myPriority) {
+                childIndex = leftIndex;
+            } else {
+                childIndex = rightIndex;
+            }
+        }
+        if (contents[index].myPriority > contents[childIndex].myPriority) {
+            Node tmp = contents[childIndex];
+            contents[childIndex] = contents[index];
+            contents[index] = tmp;
+            sink(childIndex);
+        } else {
+            return;
+        }
     }
 
     /**
@@ -132,8 +162,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size + 1 == contents.length) {
             resize(contents.length * 2);
         }
-
-        /* TODO: Your code here! */
+        size++;
+        contents[size] = new Node(item, priority);
+        if (size > 1) {
+            swim(size);
+        }
     }
 
     /**
@@ -142,8 +175,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        /* TODO: Your code here! */
-        return null;
+        return contents[1].myItem;
     }
 
     /**
@@ -157,8 +189,12 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        /* TODO: Your code here! */
-        return null;
+        Node tmp = contents[1];
+        contents[1] = contents[size];
+        contents[size] = null;
+        sink(1);
+        size--;
+        return tmp.myItem;
     }
 
     /**
@@ -180,7 +216,17 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public void changePriority(T item, double priority) {
-        /* TODO: Your code here! */
+        int foundIndex = 0;
+        for (int i = 0; i <= size; i++) {
+            if (contents[i].myItem == item) {
+                contents[i].myPriority = priority;
+                foundIndex = i;
+                break;
+            }
+        }
+        if (foundIndex > 0) {
+            swim(foundIndex);
+        }
         return;
     }
 
