@@ -106,6 +106,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void swim(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
+        if (contents[index] == null) {
+            return;
+        }
         int parentIndex = parentIndex(index);
         if (parentIndex == 0) { // at the root
             return;
@@ -126,6 +129,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
+        if (contents[index] == null) {
+            return;
+        }
         int childIndex;
         int leftIndex = leftIndex(index);
         int rightIndex = rightIndex(index);
