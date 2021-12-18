@@ -73,38 +73,38 @@ public class MergeSort {
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
-//        if (items.size() == 1 || items.size() == 0) {
-//            return items;
-//        }
-//        Queue<Queue<Item>> q =  makeSingleItemQueues(items);
-//        Queue<Item> leftQ = new Queue<Item>();
-//        Queue<Item> rightQ = new Queue<Item>();
-//        int wholeSize = items.size();
-//        int middleIdx = wholeSize / 2;
-//        for (int i = 0; i < wholeSize; i++) {
-//            if (i < middleIdx) {
-//                leftQ.enqueue(q.dequeue().dequeue());
-//            } else {
-//                rightQ.enqueue(q.dequeue().dequeue());
-//            }
-//        }
-
-        /*
-        * It's possible without makeSingleItemQueues? */
         if (items.size() == 1 || items.size() == 0) {
             return items;
         }
+        Queue<Queue<Item>> q =  makeSingleItemQueues(items);
         Queue<Item> leftQ = new Queue<Item>();
         Queue<Item> rightQ = new Queue<Item>();
         int wholeSize = items.size();
         int middleIdx = wholeSize / 2;
         for (int i = 0; i < wholeSize; i++) {
             if (i < middleIdx) {
-                leftQ.enqueue(items.dequeue());
+                leftQ.enqueue(q.dequeue().dequeue());
             } else {
-                rightQ.enqueue(items.dequeue());
+                rightQ.enqueue(q.dequeue().dequeue());
             }
         }
+
+        /*
+        * It's possible without makeSingleItemQueues? */
+//        if (items.size() == 1 || items.size() == 0) {
+//            return items;
+//        }
+//        Queue<Item> leftQ = new Queue<Item>();
+//        Queue<Item> rightQ = new Queue<Item>();
+//        int wholeSize = items.size();
+//        int middleIdx = wholeSize / 2;
+//        for (int i = 0; i < wholeSize; i++) {
+//            if (i < middleIdx) {
+//                leftQ.enqueue(items.dequeue());
+//            } else {
+//                rightQ.enqueue(items.dequeue());
+//            }
+//        }
         return mergeSortedQueues(mergeSort(leftQ), mergeSort(rightQ));
     }
 
@@ -113,6 +113,18 @@ public class MergeSort {
         students.enqueue("Alice");
         students.enqueue("Vanessa");
         students.enqueue("Ethan");
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("B");
+        students.enqueue("C");
+        students.enqueue("D");
         System.out.println((mergeSort(students)));
 
     }
