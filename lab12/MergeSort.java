@@ -91,8 +91,7 @@ public class MergeSort {
 
         /*
         * It's possible without makeSingleItemQueues?
-        * No! This function is used to handle the tricky case where
-        * the object to sort is accidentally a queue! */
+        * No! This function is to ensure non-destructive! */
 //        if (items.size() == 1 || items.size() == 0) {
 //            return items;
 //        }
