@@ -9,6 +9,7 @@ public class MazeCycles extends MazeExplorer {
     public int[] edgeTo;
     public boolean[] marked;
     */
+    boolean cycleFound = false;
 
     public MazeCycles(Maze m) {
         super(m);
@@ -20,13 +21,19 @@ public class MazeCycles extends MazeExplorer {
         marked[v] = true;
         announce();
 
+
+
         for (int w : maze.adj(v)) {
             if (!marked[w]) {
                 edgeTo[w] = v;
                 announce();
                 distTo[w] = distTo[v] + 1;
                 dfs(w);
+                if (cycleFound) {
+                    return;
+                }
             } else if (edgeTo[v] != w) {
+                cycleFound = true;
                 return;
             }
         }
