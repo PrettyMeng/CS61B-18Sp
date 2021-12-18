@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Queue;
 
+
 public class MergeSort {
     /**
      * Removes and returns the smallest item that is in q1 or q2.
@@ -72,7 +73,7 @@ public class MergeSort {
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
-//        if (items.size() == 1) {
+//        if (items.size() == 1 || items.size() == 0) {
 //            return items;
 //        }
 //        Queue<Queue<Item>> q =  makeSingleItemQueues(items);
@@ -88,7 +89,9 @@ public class MergeSort {
 //            }
 //        }
 
-        if (items.size() == 1) {
+        /*
+        * It's possible without makeSingleItemQueues? */
+        if (items.size() == 1 || items.size() == 0) {
             return items;
         }
         Queue<Item> leftQ = new Queue<Item>();
