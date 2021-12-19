@@ -1,6 +1,9 @@
 import edu.princeton.cs.algs4.Queue;
 
 
+/**
+ *
+ */
 public class MergeSort {
     /**
      * Removes and returns the smallest item that is in q1 or q2.
@@ -108,6 +111,8 @@ public class MergeSort {
 //        }
         return mergeSortedQueues(mergeSort(leftQ), mergeSort(rightQ));
     }
+
+
 
     public static void main(String[] args) {
         Queue<String> students = new Queue<String>();
