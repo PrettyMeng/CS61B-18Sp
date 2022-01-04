@@ -56,7 +56,7 @@ public class Board implements WorldState{
                 for (int ii = 0; ii < size(); ii++) {
                     for (int jj = 0; jj < size(); jj++) {
                         if (tiles[i][j] == goal[ii][jj]) {
-                            distance += Math.abs(ii - j) + Math.abs(jj - j);
+                            distance += Math.abs(ii - i) + Math.abs(jj - j);
                         }
                     }
                 }
@@ -65,8 +65,8 @@ public class Board implements WorldState{
         return distance;
     }
 
-    public boolean equals(Board y) {
-        return (this.tiles).equals(y.tiles);
+    public boolean equals(Object y) {
+        return this.equals(y);
     }
 
     /** Returns the string representation of the board.
