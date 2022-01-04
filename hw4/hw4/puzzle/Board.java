@@ -37,7 +37,9 @@ public class Board implements WorldState{
         for (int i = 0; i < size(); i++) {
             for (int j = 0; j < size(); j++) {
                 if (tiles[i][j] != goal[i][j]) {
-                    mismatchCount++;
+                    if (tiles[i][j] != BLANK) {
+                        mismatchCount++;
+                    }
                 }
             }
         }
@@ -48,6 +50,9 @@ public class Board implements WorldState{
         int distance = 0;
         for (int i = 0; i < size(); i++) {
             for (int j = 0; j < size(); j++) {
+                if (tiles[i][j] == BLANK) {
+                    continue;
+                }
                 for (int ii = 0; ii < size(); ii++) {
                     for (int jj = 0; jj < size(); jj++) {
                         if (tiles[i][j] == goal[ii][jj]) {
