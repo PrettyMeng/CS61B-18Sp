@@ -5,10 +5,10 @@ import java.util.LinkedList;
 
 public class Solver {
 //    int[] distTo;
-    HashMap<WorldState, WorldState> edgeTo;
-    LinkedList<WorldState> solution;
-    HashMap<WorldState, Integer> distTo;
-    int enqueueNum = 0; // to validate the critical optimization
+    private HashMap<WorldState, WorldState> edgeTo;
+    private LinkedList<WorldState> solution;
+    private HashMap<WorldState, Integer> distTo;
+    private int enqueueNum = 0; // to validate the critical optimization
     private class SearchNode implements Comparable<SearchNode> {
         WorldState state;
         int priority;

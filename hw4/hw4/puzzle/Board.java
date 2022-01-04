@@ -1,10 +1,10 @@
 package hw4.puzzle;
 import edu.princeton.cs.algs4.Queue;
 
-public class Board implements WorldState{
-    static final int BLANK = 0;
-    int[][] tiles;
-    int[][] goal;
+public class Board implements WorldState {
+    private static final int BLANK = 0;
+    private int[][] tiles;
+    private int[][] goal;
     public Board(int[][] tiles) {
         int N = tiles.length;
         this.tiles = new int[N][N];
@@ -69,6 +69,10 @@ public class Board implements WorldState{
         return this.equals(y);
     }
 
+    public int hashCode() {
+        return tiles.hashCode();
+    }
+
     /** Returns the string representation of the board.
       * Uncomment this method. */
     public String toString() {
@@ -77,7 +81,7 @@ public class Board implements WorldState{
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
