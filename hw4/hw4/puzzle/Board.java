@@ -66,7 +66,25 @@ public class Board implements WorldState {
     }
 
     public boolean equals(Object y) {
-        return this.equals(y);
+        if (y == null) {
+            return false;
+        } else if (y.getClass() == this.getClass()) {
+            Board yBoard = (Board) y;
+            if (yBoard.size() == this.size()) {
+                for (int i = 0; i < this.size(); i++) {
+                    for (int j = 0; j < this.size(); j++) {
+                        if (yBoard.tileAt(i, j) != this.tileAt(i, j)) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     public int hashCode() {
