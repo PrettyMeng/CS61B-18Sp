@@ -37,6 +37,10 @@ public class Solver {
         distTo = new HashMap<>();
         MinPQ<SearchNode> pq = new MinPQ<>();
         solution = new LinkedList<>();
+        if (initial.isGoal()) {
+            solution.addFirst(initial);
+            return;
+        }
         SearchNode nodeToSearch;
         distTo.put(initial, 0);
         pq.insert(new SearchNode(initial, distTo.get(initial)));
@@ -44,26 +48,22 @@ public class Solver {
             nodeToSearch = pq.delMin();
             for (WorldState neighbor: nodeToSearch.getNeibgbors()) {
                 // critical optimization, avoid duplicate exploration
-                if (neighbor.equals(edgeTo.get(nodeToSearch))) {
+                if (neighbor.equals(edgeTo.get(nodeToSearch.state))) {
                     continue;
                 }
                 // relaxation, Note that it's not a "real" relaxation, because
                 // changePriority is not supported in MinPQ.
                 if (edgeTo.containsKey(neighbor)) {
                     // find a better solution
-                    if (distTo.get(nodeToSearch.state) + 1 < distTo.get(neighbor)) {
-                        SearchNode nextNode = new SearchNode(neighbor, distTo.get(nodeToSearch.state));
-                        edgeTo.put(nextNode.state, nodeToSearch.state);
-                        distTo.put(nextNode.state, distTo.get(nodeToSearch.state) + 1);
-                        pq.insert(nextNode);
+                    if (distTo.get(nodeToSearch.state) + 1 >= distTo.get(neighbor)) {
+                        continue;
                     }
-                    continue;
                 }
                 SearchNode nextNode = new SearchNode(neighbor, distTo.get(nodeToSearch.state));
-                pq.insert(nextNode);
-                enqueueNum++;
                 edgeTo.put(nextNode.state, nodeToSearch.state);
                 distTo.put(nextNode.state, distTo.get(nodeToSearch.state) + 1);
+                pq.insert(nextNode);
+                enqueueNum++;
                 if (nextNode.isGoal()) {
                     WorldState intermediateState = edgeTo.get(nextNode.state);
                     solution.addFirst(nextNode.state);
