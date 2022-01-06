@@ -17,7 +17,20 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         // TODO: Implement LSD Sort
-        return null;
+        // find the maximum length
+        int maxLength = 0;
+        String[] sorted = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++) {
+            maxLength = Math.max(maxLength, asciis[i].length());
+        }
+        for (int i = 0; i < asciis.length; i++) {
+            sorted[i] = asciis[i];
+        }
+
+        for (int i = maxLength - 1; i >= 0; i--) {
+            sortHelperLSD(sorted, i);
+        }
+        return sorted;
     }
 
     /**
@@ -28,7 +41,49 @@ public class RadixSort {
      */
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
+        // bucket size of ASCII characters
+        if (index < 0) {
+            return;
+        }
+        int R = 256;
+        int[] counts = new int[R + 1];
+        for (String ascii: asciis) {
+            counts[charAtWithPad(ascii, index)]++;
+        }
+        int[] starts = new int[counts.length];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i++) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+        String[] sorted = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++) {
+            String ascii = asciis[i];
+            int place = starts[charAtWithPad(ascii, index)];
+            sorted[place] = ascii;
+            starts[charAtWithPad(ascii, index)]++;
+        }
+        // should use this to perform destructive sorting!
+        for (int i = 0; i < asciis.length; i++) {
+            asciis[i] = sorted[i];
+        }
+        // In comparison, this will not work!
+//        asciis = sorted;
         return;
+    }
+
+    /**
+     * charAt as if the string is padded
+     * @param s
+     * @param index
+     * @return
+     */
+    private static int charAtWithPad(String s, int index) {
+        if (index < s.length()) {
+            return s.charAt(index);
+        } else {
+            return 0;
+        }
     }
 
     /**
