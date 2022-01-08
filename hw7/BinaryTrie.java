@@ -77,12 +77,12 @@ public class BinaryTrie implements Serializable {
     }
 
     // destructive recursive method to build the table
-    public void buildLookupTableHelper(Map<Character, BitSequence> table, Node root, String s) {
-        if (root.isLeaf()) {
-            table.put(root.ch, new BitSequence(s));
+    public void buildLookupTableHelper(Map<Character, BitSequence> table, Node curNode, String s) {
+        if (curNode.isLeaf()) {
+            table.put(curNode.ch, new BitSequence(s));
         } else {
-            buildLookupTableHelper(table, root.left, s + "0");
-            buildLookupTableHelper(table, root.right, s + "1");
+            buildLookupTableHelper(table, curNode.left, s + "0");
+            buildLookupTableHelper(table, curNode.right, s + "1");
         }
     }
 }
