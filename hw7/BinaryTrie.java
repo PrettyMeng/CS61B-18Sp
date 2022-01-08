@@ -10,7 +10,7 @@ public class BinaryTrie implements Serializable {
     private Node root;
 
     // Trie node class, borrowed from https://algs4.cs.princeton.edu/55compression/Huffman.java.html
-    private static class Node implements Comparable<Node> {
+    private static class Node implements Comparable<Node>, Serializable {
         private final char ch;
         private final int freq;
         private final Node left, right;
